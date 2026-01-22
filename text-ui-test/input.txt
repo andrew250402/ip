@@ -1,0 +1,3 @@
+event lecture /from 4pm /to 6pm
+list
+bye
