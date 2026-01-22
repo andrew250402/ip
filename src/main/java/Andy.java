@@ -32,6 +32,21 @@ public class Andy {
                 System.out.println(horizontal
                     + formatResponse("Ok, I've marked this task as not done yet:\n\t  " + array.get(index - 1))
                     + horizontal);                
+            } else if (inputs[0].equals("delete")) {
+                int index = Integer.parseInt(inputs[1]);
+                Task removed = array.remove(index -1);
+                System.out.println(horizontal
+                    + formatResponse("Noted, I've removed this task:\n\t  "
+                        + removed
+                        + "\n\tNow you have "
+                        + array.size()
+                        + " task"
+                        + (array.size() == 1 ? "" : "s")
+                        + " in the list."
+                    )
+                    + horizontal
+                );
+
             } else {
                 try {
                     Task newTask = parseInput(input);
@@ -127,7 +142,7 @@ public class Andy {
 
             String description = input.substring(firstSpace + 1, byIndex);
             String by = input.substring(byIndex + 4);
-            
+
             if (description.length() == 0) {
                 throw new IllegalArgumentException("Description is not found. Please add a description for your Deadline");
             } else if (by.length() == 0) {
