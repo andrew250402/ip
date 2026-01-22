@@ -33,10 +33,19 @@ public class Andy {
                     + formatResponse("Ok, I've marked this task as not done yet:\n\t  " + array.get(index - 1))
                     + horizontal);                
             } else {
+                Task newTask = parseInput(input);
+                array.add(newTask);
                 System.out.println(horizontal 
-                    + formatResponse("added: " + input)
+                    + formatResponse("Got it. I've added this task: \n\t  " 
+                        + newTask
+                        + "\n\tNow you have "
+                        + array.size()
+                        + " task"
+                        + (array.size() == 1 ? "" : "s")
+                        + " in the list."
+                    )
                     + horizontal);
-                array.add(new Task(input)); 
+ 
             }
             input = scanner.nextLine();
         }
@@ -58,7 +67,7 @@ public class Andy {
 
     static String formatList(ArrayList<Task> list) {
         int size = list.size();
-        String result = "\n";
+        String result = "\n\tHere are the tasks in your list:\n";
         for (int i=1; i <= size; i ++) {
             result = result
             + "\t"
@@ -85,5 +94,29 @@ public class Andy {
             }
         }
         return result;
+    }
+
+    static Task parseInput(String input) {
+        Task task;
+        String[] inputs = input.split(" ");
+        String first = inputs[0];
+        int firstSpace = input.indexOf(" ");
+        if (first.equals("todo")) {
+            String description = input.substring(firstSpace + 1);
+            task = new Todo(description);
+        } else if (first.equals("deadline")) {
+            int byIndex = input.indexOf("/by");
+            String description = input.substring(firstSpace + 1, byIndex);
+            String by = input.substring(byIndex + 4);
+            task = new Deadline(description, by);
+        } else {
+            int fromIndex = input.indexOf("/from");
+            int toIndex = input.indexOf("/to");
+            String description = input.substring(firstSpace + 1, fromIndex);
+            String from = input.substring(fromIndex + 5, toIndex);
+            String to = input.substring(toIndex + 4);
+            task = new Event(description, from, to);
+        }
+        return task;
     }
 }
