@@ -79,7 +79,7 @@ public class Andy {
             + formatResponse("Bye. Hope to see you again soon!")
             + horizontal);
 
-
+        parser.writeFile(array);
         scanner.close();
     }
 

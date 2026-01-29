@@ -20,6 +20,10 @@ public class Deadline extends Task {
         return new Deadline(this.description, this.by, false);
     }
 
+    public String getString() {
+        return "D|" + super.getString() + "|" + by;
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + "(by: " + by + ")";
