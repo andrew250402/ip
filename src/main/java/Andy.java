@@ -9,7 +9,9 @@ public class Andy {
             + "What can I do for you?\n" 
             + horizontal);
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> array = new ArrayList<Task>();
+
+        FileParser parser = new FileParser("../../../data/task.txt");
+        ArrayList<Task> array = parser.readFile();
 
         String input = scanner.nextLine();
 
