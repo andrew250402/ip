@@ -24,6 +24,10 @@ public class Task {
         return (isDone ? "X" : " "); 
     }
 
+    public String getString() {
+        return (isDone ? "1|" : "0|") + description;
+    }
+
     public String toString() {
         return "["
         + this.getStatusIcon()

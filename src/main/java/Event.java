@@ -21,6 +21,11 @@ public class Event extends Task {
     public Event unmarkDone() {
         return new Event(this.description, this.from, this.to, false);
     }
+
+    public String getString() {
+        return "E|" + super.getString() + "|" + from + "|" + to;
+    }
+
     @Override
     public String toString() {
         return "[E]" + super.toString() + "(from:" + from + "to: "+ to +")";

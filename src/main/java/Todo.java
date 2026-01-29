@@ -16,6 +16,10 @@ public class Todo extends Task {
         return new Todo(this.description, false);
     }
 
+    public String getString() {
+        return "T|" + super.getString();
+    }
+
     @Override
     public String toString() {
         return "[T]" + super.toString();
