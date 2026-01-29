@@ -23,7 +23,7 @@ public class Event extends Task {
     }
 
     public String getString() {
-        return "T|" + super.getString() + "|" + from + "|" + to;
+        return "E|" + super.getString() + "|" + from + "|" + to;
     }
 
     @Override

@@ -49,8 +49,13 @@ public class FileParser {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            try {
+                File newFile = new File(path);
+                newFile.createNewFile();
+            } catch (IOException e1) {
+                System.out.println("An error occurred.");
+                e1.printStackTrace();
+            }
         }
         return this.tasks;
     }
