@@ -1,17 +1,22 @@
 package andy;
+
 import java.util.Scanner;
+
 import java.time.format.DateTimeParseException;
 
 public class Andy {
     public static void main(String[] args) {
 
         Ui ui = new Ui();
-        ui.start();
-        Scanner scanner = new Scanner(System.in);
+
         FileParser parser = new FileParser("data/task.txt");
         TaskList array = new TaskList(parser.readFile());
+
+        Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         InputParser parsedInput = new InputParser(input);
+
+        ui.start();
 
         while (!parsedInput.isBye()) {
             if (parsedInput.isList()) {
@@ -39,11 +44,13 @@ public class Andy {
                     ui.custom("Please use a valid format after '/by' like yyyy-mm-dd");
                 }
             }
+
             input = scanner.nextLine();
             parsedInput = new InputParser(input);
         }
-        ui.bye();
+        
         parser.writeFile(array);
         scanner.close();
+        ui.bye();
     }
 }

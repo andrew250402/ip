@@ -1,4 +1,5 @@
 package andy;
+
 public class Ui {
     private final static String HORIZONTAL = "_________________________________________________________\n";
     public Ui() {
@@ -75,7 +76,6 @@ public class Ui {
             + formatResponse("Bye. Hope to see you again soon!")
             + HORIZONTAL);
     }
-
 
     private String formatResponse(String response) {
         return "\n" 
