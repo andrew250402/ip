@@ -1,11 +1,28 @@
 package andy;
+
+/**
+ * The InputParser class interprets user input and determines
+ * what command the user wants to execute.
+ * <p>
+ * It also converts valid task-creation commands into Task objects.
+ */
 public class InputParser {
     protected String input;
     
+    /**
+     * Creates an InputParser using the given user input.
+     *
+     * @param input The raw input entered by the user.
+     */
     public InputParser(String input) {
         this.input = input;
     }
 
+    /**
+     * Checks whether the input matches a specific command.
+     *
+     * @return true if the input matches the command, false otherwise.
+     */
     public boolean isBye() {
         return this.input.equals("bye");
     }
@@ -26,10 +43,23 @@ public class InputParser {
         return this.input.split(" ")[0].equals("delete");      
     }
 
+    /**
+     * Extracts the task index from commands such as mark, unmark, or delete.
+     *
+     * @return The task index provided by the user.
+     */
     public int getIndex() {
         return Integer.parseInt(input.split(" ")[1]);
     }
 
+    /**
+     * Creates a Task object based on the user's input.
+     * <p>
+     * Supported task types include todo, deadline, and event.
+     *
+     * @return A Task created from the user input.
+     * @throws IllegalArgumentException If the input format is invalid.
+     */
     public Task getTask() {
         Task task;
         String[] inputs = input.split(" ");
