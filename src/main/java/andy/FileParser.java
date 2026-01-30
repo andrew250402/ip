@@ -6,15 +6,35 @@ import java.io.IOException;
 import java.util.Scanner;             // Import the Scanner class to read text files
 import java.util.ArrayList;
 
+/**
+ * The FileParser class handles reading tasks from a file and
+ * writing tasks back to a file.
+ * <p>
+ * Tasks are stored in a text file using a specific format, and
+ * this class converts each line into the appropriate Task object
+ * (Todo, Deadline, or Event).
+ */
 public class FileParser {
     private String path;
     private ArrayList<Task> tasks;
 
+    /**
+     * Creates a FileParser using the given file path.
+     *
+     * @param path The file path used to read and write task data.
+     */
     public FileParser(String path) {
         this.path = path;
         this.tasks = null;
     }
 
+    /**
+     * Reads tasks from the file and converts each line into a Task object.
+     * <p>
+     * If the file does not exist, a new file will be created.
+     *
+     * @return An ArrayList of tasks read from the file.
+     */
     public ArrayList<Task> readFile() {
         File myObj = new File(this.path);
         this.tasks = new ArrayList<Task>();
@@ -60,7 +80,12 @@ public class FileParser {
         }
         return this.tasks;
     }
-
+    
+    /**
+     * Writes all tasks in the given TaskList to the file.
+     *
+     * @param array The TaskList containing tasks to be saved.
+     */
     public void writeFile(TaskList array) {
         try (FileWriter myWriter = new FileWriter(path)) {
             for (int i = 1; i <= array.size(); i ++) {
