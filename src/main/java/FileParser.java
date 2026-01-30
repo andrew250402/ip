@@ -60,9 +60,9 @@ public class FileParser {
         return this.tasks;
     }
 
-    public void writeFile(ArrayList<Task> array) {
+    public void writeFile(TaskList array) {
         try (FileWriter myWriter = new FileWriter(path)) {
-            for (int i = 0; i < array.size(); i ++) {
+            for (int i = 1; i <= array.size(); i ++) {
                 myWriter.write(array.get(i).getString() + "\n");
             }
         } catch (IOException e) {

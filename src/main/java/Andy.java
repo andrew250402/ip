@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 
 public class Andy {
     public static void main(String[] args) {
@@ -12,32 +11,32 @@ public class Andy {
         Scanner scanner = new Scanner(System.in);
 
         FileParser parser = new FileParser("../../../data/task.txt");
-        ArrayList<Task> array = parser.readFile();
+        TaskList array = new TaskList(parser.readFile());
 
         String input = scanner.nextLine();
+        InputParser parsedInput = new InputParser(input);
 
 
-        while (!input.equals("bye")) {
-            String[] inputs = input.split(" ");
-            if (input.equals("list")) {
+        while (!parsedInput.isBye()) {
+            if (parsedInput.isList()) {
                 System.out.println(horizontal 
                     + formatList(array)
                     + horizontal);     
-            } else if (inputs[0].equals("mark")) {
-                int index = Integer.parseInt(inputs[1]);
-                array = change(array, index, true);
+            } else if (parsedInput.isMark()) {
+                int index = parsedInput.getIndex();
+                array = array.change(index, true);
                 System.out.println(horizontal
-                    + formatResponse("Nice! I've marked this task as done:\n\t  " + array.get(index - 1))
+                    + formatResponse("Nice! I've marked this task as done:\n\t  " + array.get(index))
                     + horizontal);
-            } else if (inputs[0].equals("unmark")) {
-                int index = Integer.parseInt(inputs[1]);
-                array = change(array, index, false);
+            } else if (parsedInput.isUnmark()) {
+                int index = parsedInput.getIndex();
+                array = array.change(index, false);
                 System.out.println(horizontal
-                    + formatResponse("Ok, I've marked this task as not done yet:\n\t  " + array.get(index - 1))
+                    + formatResponse("Ok, I've marked this task as not done yet:\n\t  " + array.get(index))
                     + horizontal);                
-            } else if (inputs[0].equals("delete")) {
-                int index = Integer.parseInt(inputs[1]);
-                Task removed = array.remove(index -1);
+            } else if (parsedInput.isDelete()) {
+                int index = parsedInput.getIndex();
+                Task removed = array.remove(index);
                 System.out.println(horizontal
                     + formatResponse("Noted, I've removed this task:\n\t  "
                         + removed
@@ -52,8 +51,8 @@ public class Andy {
 
             } else {
                 try {
-                    Task newTask = parseInput(input);
-                    array.add(newTask);
+                    Task newTask = parsedInput.getTask();
+                    array = array.add(newTask);
                     System.out.println(horizontal 
                         + formatResponse("Got it. I've added this task: \n\t  " 
                             + newTask
@@ -79,6 +78,7 @@ public class Andy {
  
             }
             input = scanner.nextLine();
+            parsedInput = new InputParser(input);
         }
 
         System.out.println(horizontal
@@ -96,91 +96,8 @@ public class Andy {
         + "\n";
     }
 
-    static String formatList(ArrayList<Task> list) {
-        int size = list.size();
+    static String formatList(TaskList array) {
         String result = "\n\tHere are the tasks in your list:\n";
-        for (int i=1; i <= size; i ++) {
-            result = result
-            + "\t"
-            + i
-            + ". " 
-            + list.get(i-1)
-            + "\n";
-        }
-        return result;
-    }
-
-    static ArrayList<Task> change(ArrayList<Task> array, int index, boolean bool) {
-        ArrayList<Task> result = new ArrayList<Task>();
-        int size = array.size();
-        for (int i=0; i < size; i ++) {
-            if (i == index - 1) {
-                if (bool) {
-                    result.add(array.get(i).markDone());
-                } else {
-                    result.add(array.get(i).unmarkDone());
-                }
-            } else {
-                result.add(array.get(i));
-            }
-        }
-        return result;
-    }
-
-    static Task parseInput(String input) {
-        Task task;
-        String[] inputs = input.split(" ");
-        String first = inputs[0];
-        int firstSpace = input.indexOf(" ");
-        if (first.equals("todo")) {
-            String description = input.substring(firstSpace + 1);
-            if (firstSpace == -1) {
-                throw new IllegalArgumentException("Please create a new To do using this format: todo [description]");
-            } else if (description.length() == 0) {
-                throw new IllegalArgumentException("Description is not found. Please add a description for your new To do");
-            }
-            task = new Todo(description);
-        } else if (first.equals("deadline")) {
-            int byIndex = input.indexOf("/by");
-
-            if (firstSpace == -1 | byIndex == -1) {
-                throw new IllegalArgumentException("Please create a new Deadline using this format: deadline [description] /by [yyyy-mm-dd]");
-            } 
-
-            String description = input.substring(firstSpace + 1, byIndex);
-            String by = input.substring(byIndex + 4);
-
-            if (description.length() == 0) {
-                throw new IllegalArgumentException("Description is not found. Please add a description for your Deadline");
-            } else if (by.length() == 0) {
-                throw new IllegalArgumentException("Deadline is not found. Please add a deadline to your Deadline");
-            }
-            task = new Deadline(description, by);
-        } else if (first.equals("event")) {
-            int fromIndex = input.indexOf("/from");
-            int toIndex = input.indexOf("/to");
-
-            if (firstSpace == -1 | fromIndex == -1 | toIndex == -1) {
-                throw new IllegalArgumentException("Please create a new Event using this format: event [description] /from [a start time] /to [an end time]");
-            } 
-
-            String description = input.substring(firstSpace + 1, fromIndex);
-            String from = input.substring(fromIndex + 5, toIndex);
-            String to = input.substring(toIndex + 4);
-            
-            if (description.length() == 0) {
-                throw new IllegalArgumentException("Description is not found. Please add a description for your Event");
-            } else if (from.length() == 0) {
-                throw new IllegalArgumentException("Start time is not found. Please add a start time to your Event");
-            } else if (to.length() == 0) {
-                throw new IllegalArgumentException("End time is not found. Please add an end time to your Event");
-            }
-            task = new Event(description, from, to);
-        } else {
-            throw new IllegalArgumentException("Start with 'todo', 'deadline' or 'event' to add task.\n\t"
-            + "Use 'list' to view your tasks.\n\t" 
-            + "Use 'bye' to stop Andy.");
-        }
-        return task;
+        return result + array.listTasks();
     }
 }
