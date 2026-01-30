@@ -60,4 +60,16 @@ public class TaskList {
         }
         return new TaskList(result);
     }
+
+    public TaskList find(String keyword) {
+        ArrayList<Task> result = new ArrayList<Task>();
+        int size = array.size();
+        for (int i = 0; i < size; i ++) {
+            Task task = array.get(i);
+            if (task.getDescription().indexOf(keyword) != -1) {
+                result.add(task);
+            }
+        }
+        return new TaskList(result);
+    }
 }

@@ -28,6 +28,10 @@ public class Andy {
                 int index = parsedInput.getIndex();
                 Task removed = array.remove(index);
                 ui.remove(array, removed);
+            } else if (parsedInput.isFind()) {
+                String keyword = parsedInput.getArgument();
+                TaskList desiredList = array.find(keyword);
+                ui.listFind(desiredList);
             } else {
                 try {
                     Task newTask = parsedInput.getTask();

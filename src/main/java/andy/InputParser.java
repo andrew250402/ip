@@ -26,8 +26,16 @@ public class InputParser {
         return this.input.split(" ")[0].equals("delete");      
     }
 
+    public boolean isFind() {
+        return this.input.split(" ")[0].equals("find");
+    }
+
+    public String getArgument() {
+        return input.split(" ")[1];
+    }
+
     public int getIndex() {
-        return Integer.parseInt(input.split(" ")[1]);
+        return Integer.parseInt(this.getArgument());
     }
 
     public Task getTask() {

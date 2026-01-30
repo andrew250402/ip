@@ -76,7 +76,11 @@ public class Ui {
             + HORIZONTAL);
     }
 
-
+    public void listFind(TaskList array) {
+        System.out.println(HORIZONTAL
+            + formatFind(array)
+            + HORIZONTAL);  
+    }
     private String formatResponse(String response) {
         return "\n" 
         + "\t" 
@@ -86,6 +90,11 @@ public class Ui {
 
     private String formatList(TaskList array) {
         String result = "\n\tHere are the tasks in your list:\n";
+        return result + array.listTasks();
+    }
+
+    private String formatFind(TaskList array) {
+        String result = "\n\tHere are the matching tasks in your list:\n";
         return result + array.listTasks();
     }
 }
