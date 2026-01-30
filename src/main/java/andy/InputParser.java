@@ -43,13 +43,21 @@ public class InputParser {
         return this.input.split(" ")[0].equals("delete");      
     }
 
+    public boolean isFind() {
+        return this.input.split(" ")[0].equals("find");
+    }
+
+    public String getArgument() {
+        return input.split(" ")[1];
+    }
+
     /**
      * Extracts the task index from commands such as mark, unmark, or delete.
      *
      * @return The task index provided by the user.
      */
     public int getIndex() {
-        return Integer.parseInt(input.split(" ")[1]);
+        return Integer.parseInt(this.getArgument());
     }
 
     /**
