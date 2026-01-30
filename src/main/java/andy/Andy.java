@@ -8,7 +8,7 @@ public class Andy {
         Ui ui = new Ui();
         ui.start();
         Scanner scanner = new Scanner(System.in);
-        FileParser parser = new FileParser("../../../data/task.txt");
+        FileParser parser = new FileParser("data/task.txt");
         TaskList array = new TaskList(parser.readFile());
         String input = scanner.nextLine();
         InputParser parsedInput = new InputParser(input);
