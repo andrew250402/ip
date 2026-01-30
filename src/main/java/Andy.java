@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Andy {
@@ -68,6 +69,11 @@ public class Andy {
                         + formatResponse(e.getMessage())
                         + horizontal
                     );
+                } catch (DateTimeParseException e1) {
+                    System.out.println(horizontal
+                        + formatResponse("Please use a valid format after '/by' like yyyy-mm-dd")
+                        + horizontal
+                    ); 
                 }
 
  
@@ -137,9 +143,8 @@ public class Andy {
         } else if (first.equals("deadline")) {
             int byIndex = input.indexOf("/by");
 
-
             if (firstSpace == -1 | byIndex == -1) {
-                throw new IllegalArgumentException("Please create a new Deadline using this format: deadline [description] /by [a deadline]");
+                throw new IllegalArgumentException("Please create a new Deadline using this format: deadline [description] /by [yyyy-mm-dd]");
             } 
 
             String description = input.substring(firstSpace + 1, byIndex);
