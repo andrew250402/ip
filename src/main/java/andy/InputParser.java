@@ -1,3 +1,4 @@
+package andy;
 public class InputParser {
     protected String input;
     
