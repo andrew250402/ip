@@ -1,4 +1,5 @@
 package andy;
+
 import java.util.ArrayList;
 
 /**
@@ -74,12 +75,12 @@ public class TaskList {
     public String listTasks() {
         int size = this.size();
         String result = "";
-        for (int i=1; i <= size; i ++) {
+        for (int i = 1; i <= size; i ++) {
             result = result
             + "\t"
             + i
             + ". " 
-            + this.array.get(i-1)
+            + this.array.get(i - 1)
             + "\n";
         }
         return result;
@@ -95,7 +96,8 @@ public class TaskList {
     public TaskList change(int index, boolean bool) {
         ArrayList<Task> result = new ArrayList<Task>();
         int size = array.size();
-        for (int i=0; i < size; i ++) {
+
+        for (int i = 0; i < size; i ++) {
             if (i == index - 1) {
                 if (bool) {
                     result.add(array.get(i).markDone());
@@ -106,6 +108,7 @@ public class TaskList {
                 result.add(array.get(i));
             }
         }
+        
         return new TaskList(result);
     }
 }

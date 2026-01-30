@@ -1,8 +1,10 @@
 package andy;
+
 import java.io.File;                  // Import the File class
 import java.io.FileNotFoundException; // Import this class to handle errors
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.Scanner;             // Import the Scanner class to read text files
 import java.util.ArrayList;
 
@@ -43,9 +45,11 @@ public class FileParser {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] line = data.split("\\|");
+
                 String type = line[0];
                 String done = line[1];
                 String description = line[2];
+
                 if (type.equals("T")) {
                     if (done.equals("1")) {
                         this.tasks.add(new Todo(description, true));
@@ -54,6 +58,7 @@ public class FileParser {
                     }
                 } else if (type.equals("D")) {
                     String by = line[3];
+
                     if (done.equals("1")) {
                         this.tasks.add(new Deadline(description, by, true));
                     } else {
@@ -62,6 +67,7 @@ public class FileParser {
                 } else {
                     String from = line[3];
                     String to = line[4];
+
                     if (done.equals("1")) {
                         this.tasks.add(new Event(description, from, to, true));
                     } else {
@@ -78,6 +84,7 @@ public class FileParser {
                 e1.printStackTrace();
             }
         }
+        
         return this.tasks;
     }
     
