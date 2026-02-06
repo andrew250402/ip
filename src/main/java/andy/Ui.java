@@ -5,33 +5,37 @@ public class Ui {
     public Ui() {
     }
 
-    public void start() {
-        System.out.println(HORIZONTAL
+    public String start() {
+        String result = (HORIZONTAL
             + "Hello! I'm Andy\n" 
             + "What can I do for you?\n" 
             + HORIZONTAL);
+        return result;
     }
 
-    public void listTasks(TaskList array) {
-        System.out.println(HORIZONTAL
+    public String listTasks(TaskList array) {
+        String result = (HORIZONTAL
             + formatList(array)
             + HORIZONTAL);  
+        return result;
     }
 
-    public void mark(TaskList array, int index) {
-        System.out.println(HORIZONTAL
+    public String mark(TaskList array, int index) {
+        String result = (HORIZONTAL
             + formatResponse("Nice! I've marked this task as done:\n\t  " + array.get(index))
             + HORIZONTAL);
+        return result;
     }
 
-    public void unmark(TaskList array, int index) {
-        System.out.println(HORIZONTAL
+    public String unmark(TaskList array, int index) {
+        String result = (HORIZONTAL
             + formatResponse("Ok, I've marked this task as not done yet:\n\t  " + array.get(index))
             + HORIZONTAL);
+        return result;
     }
 
-    public void remove(TaskList array, Task removed) {
-        System.out.println(HORIZONTAL
+    public String remove(TaskList array, Task removed) {
+        String result = (HORIZONTAL
             + formatResponse("Noted, I've removed this task:\n\t  "
                 + removed
                 + "\n\tNow you have "
@@ -42,10 +46,11 @@ public class Ui {
             )
             + HORIZONTAL
         );
+        return result;
     }
 
-    public void add(TaskList array, Task newTask) {
-        System.out.println(HORIZONTAL 
+    public String add(TaskList array, Task newTask) {
+        String result = (HORIZONTAL 
             + formatResponse("Got it. I've added this task: \n\t  " 
                 + newTask
                 + "\n\tNow you have "
@@ -55,32 +60,37 @@ public class Ui {
                 + " in the list."
             )
             + HORIZONTAL);
+        return result;
     }
 
-    public void error(Exception e) {
-        System.out.println(HORIZONTAL
+    public String error(Exception e) {
+        String result = (HORIZONTAL
             + formatResponse(e.getMessage())
             + HORIZONTAL
         );
+        return result;
     }
 
-    public void custom(String message) {
-        System.out.println(HORIZONTAL
+    public String custom(String message) {
+        String result = (HORIZONTAL
             + formatResponse(message)
             + HORIZONTAL
         ); 
+        return result;
     }
 
-    public void bye() {
-        System.out.println(HORIZONTAL
+    public String bye() {
+        String result = (HORIZONTAL
             + formatResponse("Bye. Hope to see you again soon!")
             + HORIZONTAL);
+        return result;
     }
 
-    public void listFind(TaskList array) {
-        System.out.println(HORIZONTAL
+    public String listFind(TaskList array) {
+        String result = (HORIZONTAL
             + formatFind(array)
             + HORIZONTAL);  
+        return result;
     }
     private String formatResponse(String response) {
         return "\n" 
