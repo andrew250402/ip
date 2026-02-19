@@ -138,22 +138,17 @@ public class TaskList {
         return new TaskList(result);
     }
 
-    public TaskList find(String keyword) {
-        assert keyword != null : "Search keyword cannot be null";
-        assert array != null : "Internal task list should exist";
+public TaskList find(String keyword) {
+    assert keyword != null : "Search keyword cannot be null";
+    keyword = keyword.trim().toLowerCase();
 
-        ArrayList<Task> result = new ArrayList<Task>();
-        int size = array.size();
-
-        for (int i = 0; i < size; i++) {
-            Task task = array.get(i);
-            assert task != null : "Task entries should never be null";
-
-            if (task.getDescription().indexOf(keyword) != -1) {
-                result.add(task);
-            }
+    ArrayList<Task> result = new ArrayList<>();
+    for (Task task : array) {
+        if (task.getDescription().toLowerCase().contains(keyword)) {
+            result.add(task);
         }
-
-        return new TaskList(result);
     }
+    return new TaskList(result);
+}
+
 }
