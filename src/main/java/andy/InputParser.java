@@ -15,40 +15,44 @@ public class InputParser {
      * @param input The raw input entered by the user.
      */
     public InputParser(String input) {
+        assert input != null : "Input should never be null";
         this.input = input;
     }
 
-    /**
-     * Checks whether the input matches a specific command.
-     *
-     * @return true if the input matches the command, false otherwise.
-     */
     public boolean isBye() {
+        assert input != null;
         return this.input.equals("bye");
     }
 
     public boolean isList() {
+        assert input != null;
         return this.input.equals("list");
     }
 
     public boolean isMark() {
+        assert input != null;
         return this.input.split(" ")[0].equals("mark");      
     }
 
     public boolean isUnmark() {
+        assert input != null;
         return this.input.split(" ")[0].equals("unmark");      
     }
 
     public boolean isDelete() {
+        assert input != null;
         return this.input.split(" ")[0].equals("delete");      
     }
 
     public boolean isFind() {
+        assert input != null;
         return this.input.split(" ")[0].equals("find");
     }
 
     public String getArgument() {
-        return input.split(" ")[1];
+        String[] parts = input.split(" ");
+        assert parts.length > 1 : "Command expected to have an argument";
+        return parts[1];
     }
 
     /**
@@ -57,37 +61,42 @@ public class InputParser {
      * @return The task index provided by the user.
      */
     public int getIndex() {
-        return Integer.parseInt(this.getArgument());
+        String argument = this.getArgument();
+        assert argument.matches("\\d+") : "Task index should be numeric";
+        return Integer.parseInt(argument);
     }
 
     /**
      * Creates a Task object based on the user's input.
-     * <p>
-     * Supported task types include todo, deadline, and event.
-     *
-     * @return A Task created from the user input.
-     * @throws IllegalArgumentException If the input format is invalid.
      */
     public Task getTask() {
+        assert input != null : "Input must exist before parsing task";
+
         Task task;
         String[] inputs = input.split(" ");
+        assert inputs.length > 0 : "Input should contain at least a command keyword";
+
         String first = inputs[0];
         int firstSpace = input.indexOf(" ");
 
         if (first.equals("todo")) {
-            String description = input.substring(firstSpace + 1);
 
-            if (firstSpace == -1) {
-                throw new IllegalArgumentException(
-                    "Please create a new To do using this format: todo [description]");
-            } else if (description.length() == 0) {
+            assert firstSpace != -1 : "Todo command must contain description";
+
+            String description = input.substring(firstSpace + 1);
+            assert description != null;
+
+            if (description.length() == 0) {
                 throw new IllegalArgumentException(
                     "Description is not found. Please add a description for your new To do");
             }
 
             task = new Todo(description);
+
         } else if (first.equals("deadline")) {
+
             int byIndex = input.indexOf("/by");
+            assert byIndex != -1 : "Deadline must contain /by marker";
 
             if (firstSpace == -1 | byIndex == -1) {
                 throw new IllegalArgumentException(
@@ -96,6 +105,9 @@ public class InputParser {
 
             String description = input.substring(firstSpace + 1, byIndex);
             String by = input.substring(byIndex + 4);
+
+            assert description != null;
+            assert by != null;
 
             if (description.length() == 0) {
                 throw new IllegalArgumentException(
@@ -106,9 +118,15 @@ public class InputParser {
             }
 
             task = new Deadline(description, by);
+
         } else if (first.equals("event")) {
+
             int fromIndex = input.indexOf("/from");
             int toIndex = input.indexOf("/to");
+
+            assert fromIndex != -1 : "Event must contain /from marker";
+            assert toIndex != -1 : "Event must contain /to marker";
+            assert fromIndex < toIndex : "/from must appear before /to";
 
             if (firstSpace == -1 | fromIndex == -1 | toIndex == -1) {
                 throw new IllegalArgumentException(
@@ -118,7 +136,11 @@ public class InputParser {
             String description = input.substring(firstSpace + 1, fromIndex);
             String from = input.substring(fromIndex + 5, toIndex);
             String to = input.substring(toIndex + 4);
-            
+
+            assert description != null;
+            assert from != null;
+            assert to != null;
+
             if (description.length() == 0) {
                 throw new IllegalArgumentException(
                     "Description is not found. Please add a description for your Event");
@@ -131,6 +153,7 @@ public class InputParser {
             }
 
             task = new Event(description, from, to);
+
         } else {
             throw new IllegalArgumentException(
                 "Start with 'todo', 'deadline' or 'event' to add task.\n\t"
@@ -138,6 +161,7 @@ public class InputParser {
                 + "Use 'bye' to stop Andy.");
         }
         
+        assert task != null : "Task should be created before returning";
         return task;      
     }
 }
