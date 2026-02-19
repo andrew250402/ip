@@ -15,6 +15,7 @@ public class TaskList {
      */
     public TaskList() {
         this.array = new ArrayList<Task>();
+        assert this.array != null : "Internal task list should be initialized";
     }
 
     /**
@@ -23,6 +24,7 @@ public class TaskList {
      * @param array The ArrayList of tasks to store.
      */
     public TaskList(ArrayList<Task> array) {
+        assert array != null : "Task list cannot be null";
         this.array = array;
     }
 
@@ -32,6 +34,7 @@ public class TaskList {
      * @return The total number of tasks.
      */
     public int size() {
+        assert this.array != null : "Internal task list should exist";
         return this.array.size();
     }
 
@@ -42,7 +45,9 @@ public class TaskList {
      * @return A new TaskList containing the added task.
      */
     public TaskList add(Task task) {
+        assert task != null : "Cannot add null task";
         this.array.add(task);
+        assert this.array.contains(task) : "Task should be added successfully";
         return new TaskList(array);
     }
 
@@ -53,7 +58,11 @@ public class TaskList {
      * @return The task that was removed.
      */
     public Task remove(int index) {
-        Task removed = this.array.remove(index -1);
+        assert index >= 1 : "Index must be 1-based and positive";
+        assert index <= this.array.size() : "Index must be within list size";
+
+        Task removed = this.array.remove(index - 1);
+        assert removed != null : "Removed task should exist";
         return removed;
     }
 
@@ -64,7 +73,12 @@ public class TaskList {
      * @return The requested task.
      */
     public Task get(int index) {
-        return array.get(index - 1);
+        assert index >= 1 : "Index must be 1-based and positive";
+        assert index <= this.array.size() : "Index must be within list size";
+
+        Task task = array.get(index - 1);
+        assert task != null : "Retrieved task should exist";
+        return task;
     }
 
     /**
@@ -73,16 +87,22 @@ public class TaskList {
      * @return A string representation of the task list.
      */
     public String listTasks() {
+        assert array != null : "Internal task list should exist";
+
         int size = this.size();
         String result = "";
-        for (int i = 1; i <= size; i ++) {
+
+        for (int i = 1; i <= size; i++) {
+            assert i - 1 < array.size() : "Loop index must remain valid";
+
             result = result
             + "\t"
             + i
-            + ". " 
+            + ". "
             + this.array.get(i - 1)
             + "\n";
         }
+
         return result;
     }
 
@@ -94,10 +114,15 @@ public class TaskList {
      * @return A new TaskList with the updated task.
      */
     public TaskList change(int index, boolean bool) {
+        assert index >= 1 : "Index must be 1-based and positive";
+        assert index <= array.size() : "Index must be within list size";
+
         ArrayList<Task> result = new ArrayList<Task>();
         int size = array.size();
 
-        for (int i = 0; i < size; i ++) {
+        for (int i = 0; i < size; i++) {
+            assert array.get(i) != null : "Task entries should never be null";
+
             if (i == index - 1) {
                 if (bool) {
                     result.add(array.get(i).markDone());
@@ -108,19 +133,27 @@ public class TaskList {
                 result.add(array.get(i));
             }
         }
-        
+
+        assert result.size() == array.size() : "Change operation must preserve list size";
         return new TaskList(result);
     }
 
     public TaskList find(String keyword) {
+        assert keyword != null : "Search keyword cannot be null";
+        assert array != null : "Internal task list should exist";
+
         ArrayList<Task> result = new ArrayList<Task>();
         int size = array.size();
-        for (int i = 0; i < size; i ++) {
+
+        for (int i = 0; i < size; i++) {
             Task task = array.get(i);
+            assert task != null : "Task entries should never be null";
+
             if (task.getDescription().indexOf(keyword) != -1) {
                 result.add(task);
             }
         }
+
         return new TaskList(result);
     }
 }
