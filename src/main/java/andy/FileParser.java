@@ -46,34 +46,7 @@ public class FileParser {
                 String data = myReader.nextLine();
                 String[] line = data.split("\\|");
 
-                String type = line[0];
-                String done = line[1];
-                String description = line[2];
-
-                if (type.equals("T")) {
-                    if (done.equals("1")) {
-                        this.tasks.add(new Todo(description, true));
-                    } else {
-                        this.tasks.add(new Todo(description));
-                    }
-                } else if (type.equals("D")) {
-                    String by = line[3];
-
-                    if (done.equals("1")) {
-                        this.tasks.add(new Deadline(description, by, true));
-                    } else {
-                        this.tasks.add(new Deadline(description, by));
-                    }
-                } else {
-                    String from = line[3];
-                    String to = line[4];
-
-                    if (done.equals("1")) {
-                        this.tasks.add(new Event(description, from, to, true));
-                    } else {
-                        this.tasks.add(new Event(description, from, to));
-                    }
-                }
+                this.parseLine(line);
             }
         } catch (FileNotFoundException e) {
             try {
@@ -86,6 +59,37 @@ public class FileParser {
         }
         
         return this.tasks;
+    }
+
+    private void parseLine(String[] line) {
+        String type = line[0];
+        String done = line[1];
+        String description = line[2];
+
+        if (type.equals("T")) {
+            if (done.equals("1")) {
+                this.tasks.add(new Todo(description, true));
+            } else {
+                this.tasks.add(new Todo(description));
+            }
+        } else if (type.equals("D")) {
+            String by = line[3];
+
+            if (done.equals("1")) {
+                this.tasks.add(new Deadline(description, by, true));
+            } else {
+                this.tasks.add(new Deadline(description, by));
+            }
+        } else {
+            String from = line[3];
+            String to = line[4];
+
+            if (done.equals("1")) {
+                this.tasks.add(new Event(description, from, to, true));
+            } else {
+                this.tasks.add(new Event(description, from, to));
+            }
+        }
     }
     
     /**
