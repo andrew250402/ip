@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 /**
  * A GUI for Andy using FXML.
@@ -23,6 +24,12 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setAndy(andy);  // inject the Andy instance
+            stage.setTitle("Andy Task Manager");
+
+            // ⭐ window icon
+            stage.getIcons().add(
+                new Image(getClass().getResourceAsStream("/images/paimon.png"))
+            );
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
