@@ -8,61 +8,59 @@ package andy;
  */
 public class InputParser {
     protected String input;
-    
+
     /**
      * Creates an InputParser using the given user input.
      *
      * @param input The raw input entered by the user.
      */
     public InputParser(String input) {
-        assert input != null : "Input should never be null";
-        this.input = input;
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+        this.input = input.trim();
     }
 
     public boolean isBye() {
-        assert input != null;
         return this.input.equals("bye");
     }
 
     public boolean isList() {
-        assert input != null;
         return this.input.equals("list");
     }
 
     public boolean isMark() {
-        assert input != null;
-        return this.input.split(" ")[0].equals("mark");      
+        return this.input.startsWith("mark ");
     }
 
     public boolean isUnmark() {
-        assert input != null;
-        return this.input.split(" ")[0].equals("unmark");      
+        return this.input.startsWith("unmark ");
     }
 
     public boolean isDelete() {
-        assert input != null;
-        return this.input.split(" ")[0].equals("delete");      
+        return this.input.startsWith("delete ");
     }
 
     public boolean isFind() {
-        assert input != null;
-        return this.input.split(" ")[0].equals("find");
+        return this.input.startsWith("find ");
     }
 
     public String getArgument() {
-        String[] parts = input.split(" ");
-        assert parts.length > 1 : "Command expected to have an argument";
-        return parts[1];
+        String[] parts = input.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new IllegalArgumentException("Command requires an argument");
+        }
+        return parts[1].trim();
     }
 
     /**
      * Extracts the task index from commands such as mark, unmark, or delete.
-     *
-     * @return The task index provided by the user.
      */
     public int getIndex() {
         String argument = this.getArgument();
-        assert argument.matches("\\d+") : "Task index should be numeric";
+        if (!argument.matches("\\d+")) {
+            throw new IllegalArgumentException("Task index should be a number");
+        }
         return Integer.parseInt(argument);
     }
 
@@ -70,98 +68,111 @@ public class InputParser {
      * Creates a Task object based on the user's input.
      */
     public Task getTask() {
-        assert input != null : "Input must exist before parsing task";
+        String[] parts = input.split(" ", 2);
+        String command = parts[0];
 
-        Task task;
-        String[] inputs = input.split(" ");
-        assert inputs.length > 0 : "Input should contain at least a command keyword";
+        switch (command) {
+        case "todo":
+            return handleTodo(parts);
 
-        String first = inputs[0];
-        int firstSpace = input.indexOf(" ");
+        case "deadline":
+            return handleDeadline(parts);
 
-        if (first.equals("todo")) {
+        case "event":
+            return handleEvent(parts);
 
-            assert firstSpace != -1 : "Todo command must contain description";
-
-            String description = input.substring(firstSpace + 1);
-            assert description != null;
-
-            if (description.length() == 0) {
-                throw new IllegalArgumentException(
-                    "Description is not found. Please add a description for your new To do");
-            }
-
-            task = new Todo(description);
-
-        } else if (first.equals("deadline")) {
-
-            int byIndex = input.indexOf("/by");
-            assert byIndex != -1 : "Deadline must contain /by marker";
-
-            if (firstSpace == -1 | byIndex == -1) {
-                throw new IllegalArgumentException(
-                    "Please create a new Deadline using this format: deadline [description] /by [yyyy-mm-dd]");
-            } 
-
-            String description = input.substring(firstSpace + 1, byIndex);
-            String by = input.substring(byIndex + 4);
-
-            assert description != null;
-            assert by != null;
-
-            if (description.length() == 0) {
-                throw new IllegalArgumentException(
-                    "Description is not found. Please add a description for your Deadline");
-            } else if (by.length() == 0) {
-                throw new IllegalArgumentException(
-                    "Deadline is not found. Please add a deadline to your Deadline");
-            }
-
-            task = new Deadline(description, by);
-
-        } else if (first.equals("event")) {
-
-            int fromIndex = input.indexOf("/from");
-            int toIndex = input.indexOf("/to");
-
-            assert fromIndex != -1 : "Event must contain /from marker";
-            assert toIndex != -1 : "Event must contain /to marker";
-            assert fromIndex < toIndex : "/from must appear before /to";
-
-            if (firstSpace == -1 | fromIndex == -1 | toIndex == -1) {
-                throw new IllegalArgumentException(
-                    "Please create a new Event using this format: event [description] /from [a start time] /to [an end time]");
-            } 
-
-            String description = input.substring(firstSpace + 1, fromIndex);
-            String from = input.substring(fromIndex + 5, toIndex);
-            String to = input.substring(toIndex + 4);
-
-            assert description != null;
-            assert from != null;
-            assert to != null;
-
-            if (description.length() == 0) {
-                throw new IllegalArgumentException(
-                    "Description is not found. Please add a description for your Event");
-            } else if (from.length() == 0) {
-                throw new IllegalArgumentException(
-                    "Start time is not found. Please add a start time to your Event");
-            } else if (to.length() == 0) {
-                throw new IllegalArgumentException(
-                    "End time is not found. Please add an end time to your Event");
-            }
-
-            task = new Event(description, from, to);
-
-        } else {
+        default:
             throw new IllegalArgumentException(
-                "Start with 'todo', 'deadline' or 'event' to add task.\n\t"
-                + "Use 'list' to view your tasks.\n\t" 
-                + "Use 'bye' to stop Andy.");
+                    "Start with 'todo', 'deadline' or 'event' to add task.\n\t"
+                    + "Use 'list' to view your tasks.\n\t"
+                    + "Use 'bye' to stop Andy.");
         }
-        
-        assert task != null : "Task should be created before returning";
-        return task;      
+    }
+
+    /**
+     * Handles creation of Todo tasks.
+     */
+    private Task handleTodo(String[] parts) {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Description is not found. Please add a description for your new To do");
+        }
+
+        String description = parts[1].trim();
+        return new Todo(description);
+    }
+
+    /**
+     * Handles creation of Deadline tasks.
+     */
+    private Task handleDeadline(String[] parts) {
+        if (parts.length < 2) {
+            throw new IllegalArgumentException(
+                    "Please create a new Deadline using this format: deadline [description] /by [yyyy-mm-dd]");
+        }
+
+        String body = parts[1];
+        int byIndex = body.indexOf("/by");
+
+        if (byIndex == -1) {
+            throw new IllegalArgumentException(
+                    "Deadline must contain /by. Format: deadline [description] /by [yyyy-mm-dd]");
+        }
+
+        String description = body.substring(0, byIndex).trim();
+        String by = body.substring(byIndex + 3).trim();
+
+        if (description.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Description is not found. Please add a description for your Deadline");
+        }
+
+        if (by.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Deadline is not found. Please add a deadline to your Deadline");
+        }
+
+        return new Deadline(description, by);
+    }
+
+    /**
+     * Handles creation of Event tasks.
+     */
+    private Task handleEvent(String[] parts) {
+        if (parts.length < 2) {
+            throw new IllegalArgumentException(
+                    "Please create a new Event using this format: event [description] /from [start] /to [end]");
+        }
+
+        String body = parts[1];
+
+        int fromIndex = body.indexOf("/from");
+        int toIndex = body.indexOf("/to");
+
+        if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
+            throw new IllegalArgumentException(
+                    "Event must follow format: event [description] /from [start] /to [end]");
+        }
+
+        String description = body.substring(0, fromIndex).trim();
+        String from = body.substring(fromIndex + 5, toIndex).trim();
+        String to = body.substring(toIndex + 3).trim();
+
+        if (description.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Description is not found. Please add a description for your Event");
+        }
+
+        if (from.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Start time is not found. Please add a start time to your Event");
+        }
+
+        if (to.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "End time is not found. Please add an end time to your Event");
+        }
+
+        return new Event(description, from, to);
     }
 }
