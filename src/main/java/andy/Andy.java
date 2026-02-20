@@ -19,10 +19,6 @@ public class Andy {
         andy.run();
     }
 
-    /* =========================
-       HIGH LEVEL PROGRAM FLOW
-       ========================= */
-
     private void run() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(ui.start());
@@ -40,12 +36,32 @@ public class Andy {
     }
 
     private void shutdown(Scanner scanner) {
-        parser.writeFile(array);
+        saveToFile(); // ensure latest state saved
         scanner.close();
         System.out.println(ui.bye());
     }
 
+    /* =========================================================
+       AI-ASSISTED ENHANCEMENT
+       ---------------------------------------------------------
+       ChatGPT helped refactor persistence logic so that:
+       - Task list is always reloaded from file before use
+       - Task list is always saved after modification
+       This ensures the file remains the single source of truth
+       and prevents stale in-memory state.
+       ========================================================= */
+
+    private void reloadFromFile() {
+        this.array = new TaskList(parser.readFile());
+    }
+
+    private void saveToFile() {
+        parser.writeFile(array);
+    }
+
     private String executeCommand(InputParser parsedInput) {
+        reloadFromFile(); // always read latest data before handling
+
         if (parsedInput.isList()) {
             return ui.listTasks(array);
         }
@@ -72,22 +88,26 @@ public class Andy {
     private String handleMark(InputParser input) {
         int index = input.getIndex();
         array = array.change(index, true);
+        saveToFile(); // persist change
         return ui.mark(array, index);
     }
 
     private String handleUnmark(InputParser input) {
         int index = input.getIndex();
         array = array.change(index, false);
+        saveToFile();
         return ui.unmark(array, index);
     }
 
     private String handleDelete(InputParser input) {
         int index = input.getIndex();
         Task removed = array.remove(index);
+        saveToFile();
         return ui.remove(array, removed);
     }
 
     private String handleFind(InputParser input) {
+        // read-only operation — no save needed
         String keyword = input.getArgument();
         TaskList result = array.find(keyword);
         return ui.listFind(result);
@@ -97,6 +117,7 @@ public class Andy {
         try {
             Task newTask = input.getTask();
             array = array.add(newTask);
+            saveToFile();
             return ui.add(array, newTask);
         } catch (IllegalArgumentException e) {
             return ui.error(e);
@@ -109,7 +130,7 @@ public class Andy {
         InputParser parsedInput = new InputParser(input);
 
         if (parsedInput.isBye()) {
-            parser.writeFile(array);
+            saveToFile();
             return ui.bye();
         }
 
