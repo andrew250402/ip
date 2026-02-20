@@ -38,26 +38,41 @@ public class FileParser {
      * @return An ArrayList of tasks read from the file.
      */
     public ArrayList<Task> readFile() {
-        File myObj = new File(this.path);
-        this.tasks = new ArrayList<Task>();
+        File file = new File(this.path);
+        this.tasks = new ArrayList<>();
 
-        try (Scanner myReader = new Scanner(myObj)) {
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] line = data.split("\\|");
-
-                this.parseLine(line);
-            }
-        } catch (FileNotFoundException e) {
+        if (!file.exists()) {
             try {
-                File newFile = new File(path);
-                newFile.createNewFile();
-            } catch (IOException e1) {
-                System.out.println("An error occurred.");
-                e1.printStackTrace();
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Failed to create data file.");
+                e.printStackTrace();
+                return this.tasks;
             }
         }
-        
+
+        try (Scanner reader = new Scanner(file)) {
+            while (reader.hasNextLine()) {
+                String data = reader.nextLine();
+
+                if (data.trim().isEmpty()) {
+                    continue;
+                }
+
+                String[] line = data.split("\\|");
+
+                try {
+                    parseLine(line);
+                } catch (Exception e) {
+                    System.out.println("Skipping corrupted line: " + data);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Unexpected error reading file.");
+            e.printStackTrace();
+        }
+
         return this.tasks;
     }
 

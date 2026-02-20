@@ -93,19 +93,26 @@ public class Ui {
         return result;
     }
     private String formatResponse(String response) {
-        return "\n" 
-        + "\t" 
+        return "\t" 
         + response 
         + "\n";
     }
 
     private String formatList(TaskList array) {
-        String result = "\n\tHere are the tasks in your list:\n";
-        return result + array.listTasks();
+        if (array.size() == 0) {
+            return "\tYou have no tasks in your list.";
+        } else {
+            String result = "\tHere are the tasks in your list:\n";
+            return result + array.listTasks();
+        }
     }
 
     private String formatFind(TaskList array) {
-        String result = "\n\tHere are the matching tasks in your list:\n";
-        return result + array.listTasks();
+        if (array.size() == 0) {
+            return "\tNo matching tasks found in your list.";
+        } else {
+            String result = "\tHere are the matching tasks in your list:\n";
+            return result + array.listTasks();
+        }
     }
 }
