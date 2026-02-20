@@ -1,7 +1,7 @@
 package andy;
 
 public class Ui {
-    private final static String HORIZONTAL = "_________________________________________________________\n";
+    private final static String HORIZONTAL = "";
     public Ui() {
     }
 
