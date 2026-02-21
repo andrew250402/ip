@@ -1,26 +1,263 @@
-# Duke project template
+# Andy User Guide
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Andy is a desktop chatbot application that helps you manage tasks.
+It supports both **Command Line Interface (CLI)** usage and a **Graphical User Interface (GUI)**.
 
-## Setting up in Intellij
+If you prefer fast keyboard interactions, Andy lets you manage tasks efficiently using simple text commands.
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+---
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Duke.java` file, right-click it, and choose `Run Duke.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+# Quick Start
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+1. **Ensure you have Java 17 or above installed.**
+
+2. **Download the latest `.jar` file** of Andy.
+
+3. **Place the `.jar` file** in a folder that you want to use as Andy’s home directory.
+
+4. **Open a command terminal**, navigate to that folder, and run:
+
+```
+java -jar andy.jar
+```
+
+5. The GUI should appear.
+   You can type commands in the input box and press **Enter** or click **Send**.
+
+---
+
+# Features
+
+## Notes about command format
+
+* Words in UPPER_CASE are parameters supplied by the user.
+  Example: `todo DESCRIPTION`
+
+* Items in square brackets are optional.
+
+* Commands are **case-sensitive** unless stated otherwise.
+
+* Index values refer to the numbering shown in the task list.
+
+---
+
+# Viewing all tasks — `list`
+
+Shows all tasks currently stored.
+
+**Format**
+
+```
+list
+```
+
+---
+
+# Adding a todo task — `todo`
+
+Adds a simple task with a description.
+
+**Format**
+
+```
+todo DESCRIPTION
+```
+
+**Example**
+
+```
+todo buy groceries
+```
+
+---
+
+# Adding a deadline — `deadline`
+
+Adds a task with a deadline.
+
+**Format**
+
+```
+deadline DESCRIPTION /by DATE
+```
+
+**Example**
+
+```
+deadline submit report /by 2025-03-01
+```
+
+---
+
+# Adding an event — `event`
+
+Adds a task with a start and end time.
+
+**Format**
+
+```
+event DESCRIPTION /from START_TIME /to END_TIME
+```
+
+**Example**
+
+```
+event project meeting /from Monday 2pm /to Monday 4pm
+```
+
+---
+
+# Marking a task as done — `mark`
+
+Marks a task as completed.
+
+**Format**
+
+```
+mark INDEX
+```
+
+**Example**
+
+```
+mark 2
+```
+
+---
+
+# Unmarking a task — `unmark`
+
+Marks a completed task as not done.
+
+**Format**
+
+```
+unmark INDEX
+```
+
+**Example**
+
+```
+unmark 2
+```
+
+---
+
+# Deleting a task — `delete`
+
+Removes a task from the list.
+
+**Format**
+
+```
+delete INDEX
+```
+
+**Example**
+
+```
+delete 3
+```
+
+---
+
+# Finding tasks — `find`
+
+Searches for tasks containing a keyword in the description.
+
+Partial matches are supported.
+
+**Format**
+
+```
+find KEYWORD
+```
+
+**Example**
+
+```
+find meeting
+```
+
+---
+
+# Exiting the program — `bye`
+
+Closes Andy safely.
+
+**Format**
+
+```
+bye
+```
+
+---
+
+# Saving the data
+
+All task data is saved automatically whenever changes are made.
+There is no need to manually save.
+
+---
+
+# Data storage location
+
+Tasks are stored in a text file:
+
+```
+data/task.txt
+```
+
+Andy reads from this file when starting and writes to it when tasks change.
+
+---
+
+# Editing the data file manually
+
+Advanced users may edit the task file directly.
+
+⚠ Caution:
+
+* Invalid formatting may cause errors.
+* Always create a backup before editing.
+
+---
+
+# FAQ
+
+### Q: How do I move my tasks to another computer?
+
+Copy the `data/task.txt` file into the same folder as the jar file.
+
+---
+
+### Q: Why is my command not working?
+
+Ensure the command format is correct and required parameters are provided.
+
+---
+
+# Known Issues
+
+* Invalid command formats may produce error messages.
+* Editing the data file incorrectly may break task loading.
+
+---
+
+# Command Summary
+
+| Action       | Command                                 |
+| ------------ | --------------------------------------- |
+| List tasks   | `list`                                  |
+| Add todo     | `todo DESCRIPTION`                      |
+| Add deadline | `deadline DESCRIPTION /by DATE`         |
+| Add event    | `event DESCRIPTION /from START /to END` |
+| Mark task    | `mark INDEX`                            |
+| Unmark task  | `unmark INDEX`                          |
+| Delete task  | `delete INDEX`                          |
+| Find task    | `find KEYWORD`                          |
+| Exit         | `bye`                                   |
+
+---
+
+End of User Guide.
